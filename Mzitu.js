@@ -16,7 +16,7 @@
     let mainImage_p = document.getElementsByClassName("main-image")[0].querySelector("p");
     let mainImage_Img = mainImage_p.querySelector("img");
     let mainImage_Attr = mainImage_Img.getAttribute("src");     // 获取图片地址
-   
+
     let pages = Number(document.getElementsByClassName("dots")[0].nextElementSibling.childNodes[0].textContent);     // 获取页面的全部页数
 
     let url_addr = mainImage_Attr.substr(0, 32);
@@ -30,7 +30,7 @@
         let createA = document.createElement("a");
         let createImg = document.createElement("img");
         let createSpan = document.createElement("span");
-    
+
         createImg.setAttribute("src", url);
         createSpan.setAttribute("class", "pages");
         createA.appendChild(createImg);
