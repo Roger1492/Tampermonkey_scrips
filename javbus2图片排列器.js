@@ -2,8 +2,9 @@
 // @name         Javbus2 图片排列器(重制版)
 // @namespace    http://tampermonkey.net/
 // @version      0.4
-// @description  页面一分为二，做些缩略提，右侧详细信息(最好在窗口最大化的情况下查阅)
+// @description  查看页面详细信息
 // @author       Roger Shen
+// @match        https://www.javbus2.pw/page/*
 // @match        https://www.javbus2.pw/star/*
 // @match        https://www.javbus2.pw/series/*
 // @match        https://www.javbus2.pw/label/*
@@ -15,37 +16,69 @@
     'use strict';
 
     let ad = document.querySelectorAll(".ad-table, .ad-list");
-    let item = document.querySelectorAll(".item");
-    let waterfall = document.getElementById("waterfall");
+    let item = document.querySelectorAll("#waterfall>.item");
     let createSection = document.createElement("section");
     let createImgBig = document.createElement("img");
     let oneImg = document.getElementsByClassName("one");
-    let page = document.getElementsByClassName("pagination")[0];
+    let createClose = document.createElement("div");
     let CreatetoTop = document.createElement("div");
-
-    // 挪动分页的位置
-    page.style.position = "relative";
-    page.style.transform = "translateX(-700px)";
+    let winHeight = window.innerHeight;
 
     // 先删除所有的广告
     for (let i = 0; i < ad.length; i++) {
         ad[i].parentElement.removeChild(ad[i]);
     }
 
+    // 创建信息框
+    function detail() {
+        createSection.setAttribute("id", "detail");
+        createSection.setAttribute("style", "position:fixed; right:0px; top:-2000px; width:817px; height:" + winHeight + "px; background:rgba(0,0,0,.4); z-index:999; overflow-y:scroll;");
+        document.body.appendChild(createSection);
+        createSection.appendChild(createClose);
+        createSection.appendChild(createImgBig);
+
+        //创建10个img标签
+        for (let i = 0; i < 10; i++) {
+            let imgs = document.createElement("img");
+            imgs.classList.add("one");
+            imgs.style.maxWidth = "817px";
+            createSection.appendChild(imgs);
+        }
+
+        // 在信息框中添加关闭按钮
+        createClose.innerHTML = "X";
+        createClose.setAttribute("style", "position:relative; color:white; font-size:30px; font-weight:800px; cursor:pointer; z-index:999; width:40px; height:40px;line-height:40px;text-align:center; background:black;");
+        createClose.addEventListener("click", function (e) {
+            this.parentElement.style.top = "-2000px";
+            // console.log(this.parentElement);
+        }, false);
+
+        // 在信息框中添加返回顶部按钮
+        createSection.appendChild(CreatetoTop);
+        CreatetoTop.innerHTML = "toTop";
+        CreatetoTop.setAttribute("style", "position:relative; right:0px; bottom:0px; width:80px; height:30px; line-height:30px; font-size:20px; text-align:center; background:black; color:white; cursor: pointer;");
+        CreatetoTop.addEventListener("click", function (e) {
+            createSection.scrollTop = "0px";
+        }, false);
+    }
+    detail();
+
     // 删除所有item的内联style
     for (let i = 0; i < item.length; i++) {
-        item[i].removeAttribute("style");
-        item[i].style.height = "450px";     // 所有的item的高度都设置为相同的
+        // item[i].removeAttribute("style");
+        item[i].setAttribute("style","width:187px; height:330px;");
 
         // 鼠标滑动到item上时创建查看按钮
+        // TODO: 按钮的大小应该是缩略图的大小
         item[i].addEventListener("mouseenter", function (e) {
             let createSpan = document.createElement("span");
             createSpan.setAttribute("id", "view");
             createSpan.innerHTML = "查看";
-            createSpan.setAttribute("style", "position:relative; transform:translate(10px,-50px); display:inline-block; width:167px; z-index:9999; background:gray; color:white; font-size:24px; height:42px; line-height:42px; text-align:center; cursor:pointer");
+            createSpan.setAttribute("style", "position:relative; transform:translate(10px,-300px); display:inline-block; width:167px; z-index:9999; background:rgba(0,0,0,.5); color:white; font-size:24px; height:167px; line-height:167px; text-align:center; cursor:pointer");
             item[i].appendChild(createSpan);
 
             createSpan.addEventListener("click", function (e) {
+                createSection.style.top = "0px";
                 createSection.scrollTop = "0px";
 
                 // 获取AV大图的地址：
@@ -61,7 +94,6 @@
                 let avNum = avBango.split("-")[1];
                 let bango = avLetter.toLocaleLowerCase() + "00" + avNum;
 
-                // 创建图片容器
                 createImgBig.src = add_img2;
 
                 // 赋值图片地址
@@ -71,40 +103,12 @@
 
             }, false);
 
-
-
         }, false);
+
         item[i].addEventListener("mouseleave", function (e) {
             this.style.background = "";
             document.getElementById("view").parentElement.removeChild(document.getElementById("view"));
         }, false);
-
     }
-    waterfall.removeAttribute("style");
-
-    // 所有item放置到左半边
-    waterfall.setAttribute("style", "margin:10px; width:960px;");
-
-    // 增加有半边的详细信息查看框
-    createSection.setAttribute("id", "detail");
-    createSection.setAttribute("style","position:fixed; width:817px; height:974px; top:0px; left:980px; background:gray; z-index:999; overflow-y:scroll;");
-    document.body.appendChild(createSection);
-    createSection.appendChild(createImgBig);
-
-    //创建10个img标签
-    for (let i = 0; i < 20; i++) {
-        let imgs = document.createElement("img");
-        imgs.classList.add("one");
-        imgs.style.maxWidth = "817px";
-        createSection.appendChild(imgs);
-    }
-
-    // 在详细信息框中添加返回顶部按钮
-    CreatetoTop.innerHTML = "toTop";
-    CreatetoTop.setAttribute("style", "position:relative; transform:translateX(719px); width:80px; height:30px; line-height:30px; font-size:20px; text-align:center; background:black; color:white; cursor: pointer;");
-    createSection.appendChild(CreatetoTop);
-    CreatetoTop.addEventListener("click", function (e) {
-        createSection.scrollTop = "0px";
-    }, false);
 
 })();
