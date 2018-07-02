@@ -69,12 +69,11 @@
         item[i].setAttribute("style","width:187px; height:330px;");
 
         // 鼠标滑动到item上时创建查看按钮
-        // TODO: 按钮的大小应该是缩略图的大小
         item[i].addEventListener("mouseenter", function (e) {
             let createSpan = document.createElement("span");
             createSpan.setAttribute("id", "view");
             createSpan.innerHTML = "查看";
-            createSpan.setAttribute("style", "position:relative; transform:translate(10px,-300px); display:inline-block; width:167px; z-index:9999; background:rgba(0,0,0,.5); color:white; font-size:24px; height:167px; line-height:167px; text-align:center; cursor:pointer");
+            createSpan.setAttribute("style", "position:relative; transform:translate(10px, -200px); display:inline-block; width:167px; z-index:9999; background:rgba(0,0,0,.5); color:white; font-size:24px; height:60px; line-height:60px; text-align:center; cursor:pointer");
             item[i].appendChild(createSpan);
 
             createSpan.addEventListener("click", function (e) {
