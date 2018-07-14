@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name         Javbus2 图片排列器 Verson:1.0
+// @name         Javbus2 图片排列器 Verson:2.0
 // @namespace    http://tampermonkey.net/
 // @version      0.4
 // @description  查看页面详细信息
@@ -17,7 +17,7 @@
     'use strict';
 
     let ad = Array.from(document.querySelectorAll(".ad-table, .ad-list"));
-    let item = document.querySelectorAll("#waterfall>.item");
+    let item = Array.from(document.querySelectorAll(".item"));
     let createSection = document.createElement("section");
     let createImgBig = document.createElement("img");
     let oneImg = document.getElementsByClassName("one");
@@ -26,11 +26,11 @@
     let winHeight = window.innerHeight;
 
     // 先删除所有的广告
-    ad.forEach(function(element,index,array){
+    ad.forEach(function (element, index, array) {
         element.parentElement.removeChild(element);
     })
 
-    // 创建信息框
+    // 创建大图查看框
     function detail() {
         createSection.setAttribute("id", "detail");
         createSection.setAttribute("style", "position:fixed; right:0px; top:-2000px; width:817px; height:" + winHeight + "px; background:rgba(0,0,0,.4); z-index:999; overflow-y:scroll;");
@@ -64,52 +64,50 @@
     }
     detail();
 
-    // 删除所有item的内联style
-    for (let i = 0; i < item.length; i++) {
-        // item[i].removeAttribute("style");
-        // item[i].setAttribute("style","width:187px; height:330px;");
-        item[i].setAttribute("style", "postion:absolute; top:0; left:0;");
-
-        // 鼠标滑动到item上时创建查看按钮
-        item[i].addEventListener("mouseenter", function (e) {
-            let createSpan = document.createElement("span");
-            createSpan.setAttribute("id", "view");
-            createSpan.innerHTML = "查看";
-            createSpan.setAttribute("style", "position:relative; transform:translate(10px, -200px); display:inline-block; width:167px; z-index:9999; background:rgba(0,0,0,.5); color:white; font-size:24px; height:60px; line-height:60px; text-align:center; cursor:pointer");
-            item[i].appendChild(createSpan);
-
-            createSpan.addEventListener("click", function (e) {
-                createSection.style.top = "0px";
-                createSection.scrollTop = "0px";
-
-                // 获取AV大图的地址：
-                // 原始图片：https://pics.javcdn.pw/thumb/6bgm.jpg
-                // 大图地址：https://pics.javcdn.pw/cover/6bgm_b.jpg
-                let add_img = this.previousElementSibling.querySelector(".photo-frame").getElementsByTagName("img")[0].getAttribute("src");
-                let add_img1 = add_img.replace("thumb", "cover");
-                let add_img2 = add_img1.replace(".jpg", "_b.jpg");
-
-                // 获取AV番号
-                let avBango = this.previousElementSibling.querySelector("date").innerHTML;
-                let avLetter = avBango.split("-")[0];
-                let avNum = avBango.split("-")[1];
-                let bango = avLetter.toLocaleLowerCase() + "00" + avNum;
-
-                createImgBig.src = add_img2;
-
-                // 赋值图片地址
-                for (let i = 0; i <= oneImg.length; i++) {
-                    oneImg[i].src = "https://pics.dmm.co.jp/digital/video/" + bango + "/" + bango + "jp-" + (i + 1) + ".jpg";
-                }
-
-            }, false);
-
+    // mouseenter 后显示查看按钮
+    item.forEach(function (element, index, array) {
+        element.addEventListener("mouseenter", function (e) {
+            let div = document.createElement("div");
+            div.classList.add("check");
+            div.setAttribute("style", "position:absolute;top:10px; left:9px;width:168px; height:40px;line-height:40px;background:black;color:white;z-index:999; text-align:center;cursor:pointer;font-size:20px;");
+            div.innerHTML = "Check";
+            this.appendChild(div);
         }, false);
 
-        item[i].addEventListener("mouseleave", function (e) {
-            this.style.background = "";
-            document.getElementById("view").parentElement.removeChild(document.getElementById("view"));
+        // 点击查看按钮后显示大图查看框
+        element.addEventListener("click", function () {
+            createSection.style.top = "0px";
+            createSection.scrollTop = "0px";
+
+            // 获取AV大图的地址：
+            // 原始图片：https://pics.javcdn.pw/thumb/6bgm.jpg
+            // 大图地址：https://pics.javcdn.pw/cover/6bgm_b.jpg
+            let add_img = this.getElementsByTagName("img")[0].src;
+            let add_img1 = add_img.replace("thumb", "cover");
+            let add_img2 = add_img1.replace(".jpg", "_b.jpg");
+            createImgBig.src = add_img2;
+            
+            // 获取AV番号
+            // https://pics.dmm.co.jp/digital/video/ngod00080/ngod00080jp-1.jpg
+            // https://pics.dmm.co.jp/digital/video/ngod00080/ngod00080jp-2.jpg
+            let avBango = this.getElementsByTagName("date")[0].innerHTML
+            let avLetter = avBango.split("-")[0];
+            let avNum = avBango.split("-")[1];
+            let bango = avLetter.toLocaleLowerCase() + "00" + avNum;
+            
+            
+            // 赋值图片地址
+            for (let i = 0; i <= oneImg.length; i++) {
+                oneImg[i].src = "https://pics.dmm.co.jp/digital/video/" + bango + "/" + bango + "jp-" + (i + 1) + ".jpg";
+            }
         }, false);
-    }
+    })
+    // mouseleave后删除查看按钮
+    item.forEach(function (element, index, array) {
+        element.addEventListener("mouseleave", function (e) {
+            let check = document.getElementsByClassName("check")[0];
+            check.parentElement.removeChild(check);
+        }, false);
+    })
 
 })();
