@@ -4,12 +4,12 @@
 // @version      0.4
 // @description  查看页面详细信息
 // @author       Roger Shen
-// @match        https://www.javbus2.pw
-// @match        https://www.javbus2.pw/page/*
-// @match        https://www.javbus2.pw/star/*
-// @match        https://www.javbus2.pw/series/*
-// @match        https://www.javbus2.pw/label/*
-// @match        https://www.javbus2.pw/search/*
+// @match        https://www.seedmm.net/
+// @match        https://www.seedmm.net/page/*
+// @match        https://www.seedmm.net/star/*
+// @match        https://www.seedmm.net/series/*
+// @match        https://www.seedmm.net/label/*
+// @match        https://www.seedmm.net/search/*
 // @grant        none
 // ==/UserScript==
 
@@ -48,16 +48,15 @@
 
         // 在信息框中添加关闭按钮
         createClose.innerHTML = "X";
-        createClose.setAttribute("style", "position:relative; color:white; font-size:30px; font-weight:800px; cursor:pointer; z-index:999; width:40px; height:40px;line-height:40px;text-align:center; background:black;");
+        createClose.setAttribute("style", "position:fixed; opacity:.5; color:white; font-size:30px; font-weight:800px; cursor:pointer; z-index:999; width:40px; height:40px;line-height:40px;text-align:center; background:black;");
         createClose.addEventListener("click", function (e) {
             this.parentElement.style.top = "-2000px";
-            // console.log(this.parentElement);
         }, false);
 
         // 在信息框中添加返回顶部按钮
         createSection.appendChild(CreatetoTop);
         CreatetoTop.innerHTML = "toTop";
-        CreatetoTop.setAttribute("style", "position:relative; right:0px; bottom:0px; width:80px; height:30px; line-height:30px; font-size:20px; text-align:center; background:black; color:white; cursor: pointer;");
+        CreatetoTop.setAttribute("style", "position:relative; opacity:.5; right:0px; bottom:0px; width:80px; height:30px; line-height:30px; font-size:20px; text-align:center; background:black; color:white; cursor: pointer;");
         CreatetoTop.addEventListener("click", function (e) {
             createSection.scrollTop = "0px";
         }, false);
@@ -69,7 +68,7 @@
         element.addEventListener("mouseenter", function (e) {
             let div = document.createElement("div");
             div.classList.add("check");
-            div.setAttribute("style", "position:absolute;top:10px; left:9px;width:168px; height:40px;line-height:40px;background:black;color:white;z-index:999; text-align:center;cursor:pointer;font-size:20px;");
+            div.setAttribute("style", "position:absolute; top:10px; left:9px; width:168px; height:40px; line-height:40px; background:black; color:white; z-index:999; text-align:center;cursor:pointer;font-size:20px;");
             div.innerHTML = "Check";
             this.appendChild(div);
         }, false);
@@ -86,7 +85,7 @@
             let add_img1 = add_img.replace("thumb", "cover");
             let add_img2 = add_img1.replace(".jpg", "_b.jpg");
             createImgBig.src = add_img2;
-            
+
             // 获取AV番号
             // https://pics.dmm.co.jp/digital/video/ngod00080/ngod00080jp-1.jpg
             // https://pics.dmm.co.jp/digital/video/ngod00080/ngod00080jp-2.jpg
@@ -94,8 +93,7 @@
             let avLetter = avBango.split("-")[0];
             let avNum = avBango.split("-")[1];
             let bango = avLetter.toLocaleLowerCase() + "00" + avNum;
-            
-            
+
             // 赋值图片地址
             for (let i = 0; i <= oneImg.length; i++) {
                 oneImg[i].src = "https://pics.dmm.co.jp/digital/video/" + bango + "/" + bango + "jp-" + (i + 1) + ".jpg";
