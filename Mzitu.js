@@ -4,41 +4,42 @@
 // @version      0.1
 // @description  把mzitu的图片集中到一个界面
 // @author       You
-// @match        http://www.mzitu.com/*
+// @match        https://www.mzitu.com/*
 // @grant        none
 // ==/UserScript==
 
-// http://i.meizitu.net/2018/05/17c01.jpg
+// https://i.meizitu.net/2018/11/27a01.jpg
+// https://i.meizitu.net/2018/11/27a02.jpg
+// https://i.meizitu.net/2018/11/27a03.jpg
 
 (function() {
     'use strict';
 
-    let mainImage_p = document.getElementsByClassName("main-image")[0].querySelector("p");
-    let mainImage_Img = mainImage_p.querySelector("img");
-    let mainImage_Attr = mainImage_Img.getAttribute("src");     // 获取图片地址
-
-    let pages = Number(document.getElementsByClassName("dots")[0].nextElementSibling.childNodes[0].textContent);     // 获取页面的全部页数
-
-    let url_addr = mainImage_Attr.substr(0, 32);
+    let allPages = document.getElementsByClassName('dots')[0].nextElementSibling.firstChild.innerHTML;
+    let mainImg = document.getElementsByClassName('main-image')[0];
+    let firstImg = document.getElementsByClassName('main-image')[0].getElementsByTagName('img')[0].src.substr(0,33);
 
     function addZero(n){
-        return n <= 9 ? "0"+n : "" + n;
+        return n <= 9 ? '0' + n : '' + n;
     }
 
-    for(let i = 1; i < pages; i++){
-        let url = url_addr + addZero(i) + ".jpg";
-        let createA = document.createElement("a");
-        let createImg = document.createElement("img");
-        let createSpan = document.createElement("span");
+    function createImg(){
+        for(let i = 2; i < parseInt(allPages)+1; i++){
+            let parent = document.createElement('div');
+            let imgs = document.createElement('img');
+            let section = document.createElement('section');
 
-        createImg.setAttribute("src", url);
-        createSpan.setAttribute("class", "pages");
-        createA.appendChild(createImg);
-        createA.appendChild(createSpan);
-        createSpan.style.display = "block";
-        createSpan.innerText = pages + " - " + addZero(i);
+            imgs.src = firstImg + addZero(i) + '.jpg';
+            section.innerHTML = i;
 
-        mainImage_p.appendChild(createA);
-    }
+            parent.appendChild(imgs);
+            parent.append(section);
+
+            mainImg.appendChild(parent);
+        }
+    };
+
+    createImg();
+
 
 })();
