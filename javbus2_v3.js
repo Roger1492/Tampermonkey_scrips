@@ -4,14 +4,14 @@
 // @version      0.4
 // @description  查看页面详细信息
 // @author       Roger Shen
-// @match        https://www.seedmm.net/
+// @match        https://www.seedmm.net/*
 // @match        https://www.seedmm.net/page/*
 // @match        https://www.seedmm.net/star/*
 // @match        https://www.seedmm.net/series/*
 // @match        https://www.seedmm.net/label/*
 // @match        https://www.seedmm.net/search/*
 // @grant        none
-// ==/UserScript==
+// ==/UserScript==v
 
 (function () {
     'use strict';

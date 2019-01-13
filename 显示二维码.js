@@ -16,7 +16,7 @@
   let qrcode = document.createElement('div');
   wrap.setAttribute('class', 'wrap');
   qrcode.setAttribute('class', 'qrcode');
-  wrap.setAttribute('style', 'position: absolute; padding: 20px; background: white; border: 5px solid black; top: 30%; left: 42%; display: none; z-index: -9999;');
+  wrap.setAttribute('style', 'position: fixed; padding: 20px; background: white; border: 5px solid black; top: 30%; left: 42%; display: none; z-index: -9999;');
   wrap.appendChild(qrcode);
   document.body.appendChild(wrap);
 
@@ -24,7 +24,7 @@
   document.addEventListener('keydown', function (e) {
     let url = document.URL;
     if (e.keyCode === 81 && e.altKey) {
-      wrap.setAttribute('style', 'position: absolute; padding: 20px; background: white; border: 5px solid black; top: 30%; left: 42%; display: block; z-index: 9999;');
+      wrap.setAttribute('style', 'position: fixed; padding: 20px; background: white; border: 5px solid black; top: 30%; left: 42%; display: block; z-index: 9999;');
       qrcode.innerHTML = '';
       $(document).ready(function () {
         $('.qrcode').qrcode({
