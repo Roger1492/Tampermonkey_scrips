@@ -1,0 +1,21 @@
+// ==UserScript==
+// @name         模仿Vimium的油猴脚本
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  try to take over the world!
+// @author       Roger Shen
+// @match        *://*/*
+// @grant        none
+// ==/UserScript==
+
+(function() {
+  'use strict';
+
+  document.addEventListener('keydown', function(e){
+    if(e.keyCode === 70){
+      let alllink = Array.from(document.querySelectorAll('a'));
+      console.log(alllink);
+    }
+  }, false);
+
+})();
