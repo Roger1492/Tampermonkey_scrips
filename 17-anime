@@ -1,0 +1,44 @@
+// ==UserScript==
+// @name         17动漫
+// @namespace    http://tampermonkey.net/
+// @version      0.1
+// @description  try to take over the world!
+// @author       Roger Shen
+// @match        http://juren.17dm.com/manhua/*
+// @grant        none
+// ==/UserScript==
+
+(function() {
+    'use strict';
+
+    let container = document.querySelector('table tbody');
+    let url = document.querySelector('table tbody tr td img').src;
+    let page = url.replace('http://img.17dm.com/juren/manhua/','');
+    // 获取章节数
+    let section_page = /[\d]{0,3}/g.exec(page)[0];
+    // 获取本章页数
+    let img_num = document.querySelector('.collect2 li:nth-of-type(4) select').length;
+    // 把默认的两张图片隐藏起来
+    let wrapStyle = `height:700px; width: ${img_num*500}px;`;
+    let ImgWrapStyle = 'display: inline-block;box-sizing: border-box; width:500px; height:700px; border: 5px solid lightblue;';
+    let ImgStyle = 'width:500px; height:700px;';
+    document.querySelector('table tbody tr td').style.display = 'none';
+    // 生成图片
+    let createWrap = document.createElement('div');
+    createWrap.setAttribute('id', 'wrap');
+    createWrap.setAttribute('style', wrapStyle);
+    container.appendChild(createWrap);
+
+    for(let i = 0; i < img_num; i++){
+        let createImgWrap = document.createElement('div');
+        let createImg = document.createElement('img');
+        let createNum = document.createElement('div');
+        createNum.innerHTML = i + 1;
+        createImgWrap.setAttribute('style', ImgWrapStyle);
+        createImg.setAttribute('style', ImgStyle);
+        createWrap.appendChild(createImgWrap);
+        createImgWrap.appendChild(createImg);
+        createImgWrap.appendChild(createNum);
+        createImg.src = `http://img.17dm.com/juren/manhua/${section_page}/${i+1}.jpg`;
+    }
+})();
